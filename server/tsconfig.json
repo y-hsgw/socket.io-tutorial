@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "module": "commonjs",
-    "target": "es2017",
+    "target": "ES2021",
     "sourceMap": true,
     // import * as _ from '_' はエラー、代わりにimport _ = require('_') を使う
     "esModuleInterop": true,
