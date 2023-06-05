@@ -2,12 +2,15 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 
-const PORT = 8080;
+const { PORT, FRONT_END_URL } = process.env;
+if (!FRONT_END_URL || !PORT)
+  throw new Error("FRONT_END_URLが設定されていません");
+
 const app = express();
 const router = express.Router();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: ["http://localhost:3000"] },
+  cors: { origin: [FRONT_END_URL] },
 });
 
 app.use(express.json());
