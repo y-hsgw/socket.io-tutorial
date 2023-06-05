@@ -3,7 +3,9 @@
 import { useCallback, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL || "", {});
+const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL || "", {
+  withCredentials: true,
+});
 
 socket.on("connect", () => {
   console.log(`connect ${socket.id}`);
