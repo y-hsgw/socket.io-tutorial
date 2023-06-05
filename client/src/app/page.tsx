@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("ws://localhost:8080/", {});
+const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL || "", {});
 
 socket.on("connect", () => {
   console.log(`connect ${socket.id}`);
