@@ -10,7 +10,11 @@ const app = express();
 const router = express.Router();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: [FRONT_END_URL] },
+  cors: {
+    origin: [FRONT_END_URL],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 
 app.use(express.json());
