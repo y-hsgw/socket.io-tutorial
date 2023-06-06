@@ -1,19 +1,20 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { io } from "socket.io-client";
+import { useCallback, useEffect, useState } from "react";
+import { Socket, io } from "socket.io-client";
 
-const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL || "", {
-  withCredentials: true,
-});
+interface ServerToClientEvent {
+  receivedMessage: (message: string) => void;
+}
 
-socket.on("connect", () => {
-  console.log(`connect ${socket.id}`);
-});
+interface ClientToServerEvent {
+  sendMessage: (message: string) => void;
+}
 
-socket.on("disconnect", () => {
-  console.log(`disconnect`);
-});
+const socket: Socket<ServerToClientEvent, ClientToServerEvent> = io(
+  process.env.NEXT_PUBLIC_API_BASE_URL || "",
+  { withCredentials: true }
+);
 
 export default function Home() {
   const [value, setValue] = useState("");
@@ -26,15 +27,21 @@ export default function Home() {
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      socket.emit("send_message", value);
+      socket.emit("sendMessage", value);
     },
     [value]
   );
+  const changeList = useCallback((message: string) => {
+    setList((prev) => [...prev, message]);
+  }, []);
 
-  socket.on("received_message", (data) => {
-    console.log(data);
-    setList([...list, data]);
-  });
+  useEffect(() => {
+    socket.on("receivedMessage", changeList);
+
+    return () => {
+      socket.off("receivedMessage", changeList);
+    };
+  }, [changeList]);
 
   return (
     <main>

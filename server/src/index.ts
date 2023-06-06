@@ -30,10 +30,10 @@ app.use("/", router);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.on("send_message", (data) => {
+  socket.on("sendMessage", (data) => {
     console.log(data);
 
-    io.emit("received_message", data);
+    io.emit("receivedMessage", data);
   });
 
   socket.on("disconnect", () => {
