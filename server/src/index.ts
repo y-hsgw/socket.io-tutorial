@@ -6,10 +6,18 @@ const { PORT, FRONT_END_URL } = process.env;
 if (!FRONT_END_URL || !PORT)
   throw new Error("FRONT_END_URLが設定されていません");
 
+interface ServerToClientEvent {
+  receivedMessage: (message: string) => void;
+}
+
+interface ClientToServerEvent {
+  sendMessage: (message: string) => void;
+}
+
 const app = express();
 const router = express.Router();
 const server = http.createServer(app);
-const io = new Server(server, {
+const io = new Server<ClientToServerEvent, ServerToClientEvent>(server, {
   cors: {
     origin: [FRONT_END_URL],
     methods: ["GET", "POST"],
